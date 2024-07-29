@@ -4,6 +4,7 @@ import com.lion.chon.dto.UserDTO;
 import com.lion.chon.entity.UserEntity;
 import com.lion.chon.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // 사용자 등록
@@ -31,7 +34,7 @@ public class UserService {
 
         UserEntity user = UserEntity.builder()
                 .id(userDTO.getId())
-                .password(userDTO.getPassword())
+                .password(passwordEncoder.encode(userDTO.getPassword())) // 비밀번호 인코딩
                 .name(userDTO.getName())
                 .email(userDTO.getEmail())
                 .phoneNum(userDTO.getPhoneNum())
@@ -51,7 +54,7 @@ public class UserService {
     public UserDTO loginUser(String id, String password) {
         Optional<UserEntity> userOptional = userRepository.findById(id);
 
-        if (userOptional.isPresent() && userOptional.get().getPassword().equals(password)) {
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             return convertToDTO(userOptional.get());
         }
 

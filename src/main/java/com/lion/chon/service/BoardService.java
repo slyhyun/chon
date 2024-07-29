@@ -4,10 +4,11 @@ import com.lion.chon.dto.BoardDTO;
 import com.lion.chon.entity.BoardEntity;
 import com.lion.chon.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,11 +22,11 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    // 전체 글 조회
-    public List<BoardDTO> getAllBoards() {
-        return boardRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    // 페이징된 전체 글 조회
+    public Page<BoardDTO> getAllBoards(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<BoardEntity> boardPage = boardRepository.findAll(pageRequest);
+        return boardPage.map(this::convertToDTO);
     }
 
     // 특정 글 조회
