@@ -3,9 +3,11 @@ package com.lion.chon.controller;
 import com.lion.chon.dto.BoardDTO;
 import com.lion.chon.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+// 게시판 컨트롤러
 @RestController
 @RequestMapping("/boards")
 public class BoardController {
@@ -17,11 +19,10 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    // 페이징된 전체 글 조회
+    // 전체 글 조회
     @GetMapping
-    public Page<BoardDTO> getAllBoards(@RequestParam(defaultValue = "0") int page) {
-        int size = 10; // 한 페이지에 10개의 게시글
-        return boardService.getAllBoards(page, size);
+    public List<BoardDTO> getAllBoards() {
+        return boardService.getAllBoards();
     }
 
     // 특정 글 조회
@@ -47,4 +48,5 @@ public class BoardController {
     public void deleteBoard(@PathVariable int id) {
         boardService.deleteBoard(id);
     }
+
 }
