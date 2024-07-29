@@ -1,6 +1,7 @@
 package com.lion.chon.controller;
 
 import com.lion.chon.dto.BoardDTO;
+import com.lion.chon.service.ApplicationService;
 import com.lion.chon.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,12 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    private final ApplicationService applicationService;
+
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, ApplicationService applicationService) {
         this.boardService = boardService;
+        this.applicationService = applicationService;
     }
 
     // 전체 글 조회
@@ -48,5 +52,10 @@ public class BoardController {
     public void deleteBoard(@PathVariable int id) {
         boardService.deleteBoard(id);
     }
+
+    // 신청
+    @PostMapping("/application/{id}")
+    public void applicationBoard(@PathVariable int id) {applicationService.application(id);};
+
 
 }

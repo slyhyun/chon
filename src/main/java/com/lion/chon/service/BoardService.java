@@ -1,9 +1,12 @@
 package com.lion.chon.service;
 
 import com.lion.chon.dto.BoardDTO;
+import com.lion.chon.entity.ApplicationEntity;
 import com.lion.chon.entity.BoardEntity;
 import com.lion.chon.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -82,4 +85,6 @@ public class BoardService {
                 .postDate(boardDTO.getPostDate())  // DTO에서 제공된 시간을 사용
                 .build();
     }
+
+
 }
