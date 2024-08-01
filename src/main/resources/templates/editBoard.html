@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Board</title>
+</head>
+<body>
+<h1>게시글 수정</h1>
+<form th:action="@{/boards/{id}(id=${board.id})}" method="post">
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" th:value="${board.title}">
+    </div>
+    <div>
+        <label for="contents">내용:</label>
+        <textarea id="contents" name="contents" th:text="${board.contents}"></textarea>
+    </div>
+    <div>
+        <label for="location">위치:</label>
+        <input type="text" id="location" name="location" th:value="${board.location}">
+    </div>
+    <div>
+        <button type="submit">수정</button>
+    </div>
+</form>
+</body>
+</html>

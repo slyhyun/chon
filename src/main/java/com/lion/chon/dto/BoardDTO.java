@@ -9,9 +9,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardDTO {
-
     private int id;
+    private String userId;
+    private String name;
     private String email;
+    private String phoneNum;
+    private int age;
+    private String gender;
     private String title;
     private String contents;
     private String location;

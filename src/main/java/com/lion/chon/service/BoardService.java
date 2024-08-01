@@ -2,7 +2,9 @@ package com.lion.chon.service;
 
 import com.lion.chon.dto.BoardDTO;
 import com.lion.chon.entity.BoardEntity;
+import com.lion.chon.entity.UserEntity;
 import com.lion.chon.repository.BoardRepository;
+import com.lion.chon.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +18,12 @@ import java.util.Optional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, UserRepository userRepository) {
         this.boardRepository = boardRepository;
+        this.userRepository = userRepository;
     }
 
     // 페이징된 전체 글 조회
@@ -35,11 +39,27 @@ public class BoardService {
     }
 
     // 글 저장
-    public BoardDTO createBoard(BoardDTO boardDTO) {
-        BoardEntity board = convertToEntity(boardDTO);
-        board.setPostDate(LocalDateTime.now());  // 현재 시간으로 게시일 설정
-        BoardEntity savedBoard = boardRepository.save(board);
-        return convertToDTO(savedBoard);
+    public BoardDTO createBoard(String userId, BoardDTO boardDTO) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            BoardEntity board = BoardEntity.builder()
+                    .userId(user.getId())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .phoneNum(user.getPhoneNum())
+                    .age(user.getAge())
+                    .gender(user.getGender())
+                    .title(boardDTO.getTitle())
+                    .contents(boardDTO.getContents())
+                    .location(boardDTO.getLocation())
+                    .postDate(LocalDateTime.now())
+                    .build();
+            BoardEntity savedBoard = boardRepository.save(board);
+            return convertToDTO(savedBoard);
+        } else {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
     }
 
     // 글 수정
@@ -49,6 +69,7 @@ public class BoardService {
             BoardEntity board = existingBoard.get();
             board.setTitle(boardDTO.getTitle());
             board.setContents(boardDTO.getContents());
+            board.setLocation(boardDTO.getLocation());
             // 필요한 경우 다른 필드도 업데이트
 
             BoardEntity updatedBoard = boardRepository.save(board);
@@ -66,20 +87,16 @@ public class BoardService {
     private BoardDTO convertToDTO(BoardEntity board) {
         return BoardDTO.builder()
                 .id(board.getId())
+                .userId(board.getUserId())
+                .name(board.getName())
                 .email(board.getEmail())
+                .phoneNum(board.getPhoneNum())
+                .age(board.getAge())
+                .gender(board.getGender())
                 .title(board.getTitle())
                 .contents(board.getContents())
+                .location(board.getLocation())
                 .postDate(board.getPostDate())
-                .build();
-    }
-
-    private BoardEntity convertToEntity(BoardDTO boardDTO) {
-        return BoardEntity.builder()
-                .id(boardDTO.getId())
-                .email(boardDTO.getEmail())
-                .title(boardDTO.getTitle())
-                .contents(boardDTO.getContents())
-                .postDate(boardDTO.getPostDate())  // DTO에서 제공된 시간을 사용
                 .build();
     }
 }

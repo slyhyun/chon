@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Board</title>
+</head>
+<body>
+<h1>게시글 등록</h1>
+<form th:action="@{/boards}" method="post">
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title">
+    </div>
+    <div>
+        <label for="contents">내용:</label>
+        <textarea id="contents" name="contents"></textarea>
+    </div>
+    <div>
+        <label for="location">위치:</label>
+        <input type="text" id="location" name="location">
+    </div>
+    <div>
+        <button type="submit">등록</button>
+    </div>
+</form>
+</body>
+</html>
