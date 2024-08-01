@@ -16,11 +16,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO registerUser(@RequestBody UserDTO userDTO) {
+    public UserDTO registerUser(@ModelAttribute UserDTO userDTO) {
         return userService.registerUser(userDTO);
     }
-
-
 
     @PostMapping("/login")
     public UserDTO loginUser(@RequestBody UserDTO userDTO) {

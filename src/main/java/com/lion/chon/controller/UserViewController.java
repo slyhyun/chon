@@ -12,7 +12,7 @@ public class UserViewController {
     }
 
     @GetMapping("/signup")
-    public String signup(){
-        return "signup";
+    public String signup() {
+        return "signup"; // signup.html 템플릿을 반환
     }
 }
