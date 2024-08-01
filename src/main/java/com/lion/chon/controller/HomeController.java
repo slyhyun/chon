@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @GetMapping("/home")
-    public String getHome(){
-        return "home";
+    public String home() {
+        return "home"; // home.html 템플릿을 반환
     }
 }
