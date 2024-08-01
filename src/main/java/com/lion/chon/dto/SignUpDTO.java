@@ -1,16 +1,12 @@
 package com.lion.chon.dto;
 
-import lombok.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDTO {
+public class SignUpDTO {
     private String id;
     private String password;
     private String email;
@@ -20,6 +16,4 @@ public class UserDTO {
     private LocalDate birth;
     private int age;
     private String gender;
-    private LocalDateTime registerDate;
-    private String role;
 }
