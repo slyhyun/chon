@@ -69,6 +69,7 @@ public class BoardService {
                 .email(board.getEmail())
                 .title(board.getTitle())
                 .contents(board.getContents())
+                .location(board.getLocation())
                 .postDate(board.getPostDate())
                 .build();
     }
@@ -79,6 +80,7 @@ public class BoardService {
                 .email(boardDTO.getEmail())
                 .title(boardDTO.getTitle())
                 .contents(boardDTO.getContents())
+                .location(boardDTO.getLocation())
                 .postDate(boardDTO.getPostDate())  // DTO에서 제공된 시간을 사용
                 .build();
     }

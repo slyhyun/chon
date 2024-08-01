@@ -2,7 +2,6 @@ package com.lion.chon.dto;
 
 import com.lion.chon.entity.UserEntity;
 import lombok.Getter;
-import org.springframework.security.core.userdetails.User;
 
 @Getter
 public class MyPageDTO {

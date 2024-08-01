@@ -3,14 +3,11 @@ package com.lion.chon.controller;
 import com.lion.chon.entity.ApplicationEntity;
 import com.lion.chon.service.ApplicationService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/application")
 public class ApplicationController {
 
