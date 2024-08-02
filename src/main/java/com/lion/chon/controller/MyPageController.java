@@ -3,9 +3,12 @@ package com.lion.chon.controller;
 import com.lion.chon.dto.MyPageDTO;
 import com.lion.chon.entity.UserEntity;
 import com.lion.chon.repository.UserRepository;
+import com.lion.chon.service.MyPageService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -14,24 +17,26 @@ import java.util.Optional;
 public class MyPageController {
 
     private final UserRepository userRepository;
+    private final MyPageService myPageService;
 
-    public MyPageController(UserRepository userRepository){
+    public MyPageController(UserRepository userRepository, MyPageService myPageService){
         this.userRepository = userRepository;
+        this.myPageService = myPageService;
     }
 
+    // 마이페이지 유저 정보 조회
     @GetMapping("/profile")
     public MyPageDTO getUserProfile() {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
+        return myPageService.getUserProfile();
 
-        String username = userDetails.getUsername();
-        Optional<UserEntity> exsitingUser = userRepository.findById(username);
-        if (exsitingUser.isPresent()) {
-            MyPageDTO myPageDTO = new MyPageDTO(exsitingUser.get());
-            return myPageDTO;
-        } else{
-            return null;
-        }
     }
+
+    // 유저 정보 수정
+    @PostMapping("/profile")
+    public void updateProfile(@RequestBody MyPageDTO myPageDTO) {
+        myPageService.updateProfile(myPageDTO);
+    }
+
+    // 유저 정보 삭제 (회원 탈퇴)
 }
