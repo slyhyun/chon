@@ -6,10 +6,7 @@ import com.lion.chon.repository.UserRepository;
 import com.lion.chon.service.MyPageService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -39,4 +36,8 @@ public class MyPageController {
     }
 
     // 유저 정보 삭제 (회원 탈퇴)
+    @DeleteMapping("/withdrawl")
+    public void withdrawl() {
+        myPageService.withdrawl();
+    }
 }

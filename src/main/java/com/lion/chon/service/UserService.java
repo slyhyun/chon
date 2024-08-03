@@ -28,7 +28,7 @@ public class UserService {
         if (userRepository.existsById(userDTO.getId())) {
             throw new RuntimeException("ID already exists");
         }
-
+        System.out.println("userDTO = " + userDTO);
         // ID가 "admin"인 경우 role을 ADMIN으로, 그렇지 않으면 MEMBER로 설정
         UserEntity.Role role = "admin".equalsIgnoreCase(userDTO.getId()) ? UserEntity.Role.ADMIN : UserEntity.Role.MEMBER;
 

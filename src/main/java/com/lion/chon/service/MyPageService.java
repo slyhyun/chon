@@ -52,4 +52,12 @@ public class MyPageService {
             return null;
         }
     }
+
+    public void withdrawl() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+
+        String username = userDetails.getUsername();
+        userRepository.deleteById(username);
+    }
 }

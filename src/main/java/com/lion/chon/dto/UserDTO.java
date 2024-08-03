@@ -1,6 +1,7 @@
 package com.lion.chon.dto;
 
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class
+UserDTO {
     private String id;
     private String password;
     private String email;

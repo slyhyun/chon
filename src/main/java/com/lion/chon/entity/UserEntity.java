@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,4 +55,7 @@ public class UserEntity {
         ADMIN,
         MEMBER
     }
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ApplicationEntity> applications;
 }
