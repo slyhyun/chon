@@ -16,13 +16,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO registerUser(@ModelAttribute UserDTO userDTO) {
-        System.out.println("Controller userDTO = " + userDTO.getName());
-        return userService.registerUser(userDTO);
+    public String registerUser(@ModelAttribute UserDTO userDTO) {
+        try {
+            userService.registerUser(userDTO);
+            return "redirect:/login"; // 회원가입 성공 시 로그인 페이지로 리디렉션
+        } catch (RuntimeException e) {
+            return "redirect:/signup"; // 회원가입 실패 시 회원가입 페이지로 리디렉션
+        }
     }
 
     @PostMapping("/login")
-    public UserDTO loginUser(@RequestBody UserDTO userDTO) {
-        return userService.loginUser(userDTO.getId(), userDTO.getPassword());
+    public String loginUser(@ModelAttribute UserDTO userDTO) {
+        try {
+            userService.loginUser(userDTO.getId(), userDTO.getPassword());
+            return "redirect:/home"; // 로그인 성공 시 홈 페이지로 리디렉션
+        } catch (RuntimeException e) {
+            return "redirect:/login"; // 로그인 실패 시 로그인 페이지로 리디렉션
+        }
     }
 }

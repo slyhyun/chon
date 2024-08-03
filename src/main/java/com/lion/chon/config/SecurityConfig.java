@@ -32,12 +32,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/login", "/signup").permitAll()
+                        .requestMatchers("/profile").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home", true)
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("/login");
+                        })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

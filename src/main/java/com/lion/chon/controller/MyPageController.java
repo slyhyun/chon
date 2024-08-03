@@ -6,33 +6,32 @@ import com.lion.chon.repository.UserRepository;
 import com.lion.chon.service.MyPageService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
-@RestController
+@Controller
 public class MyPageController {
 
-    private final UserRepository userRepository;
     private final MyPageService myPageService;
 
-    public MyPageController(UserRepository userRepository, MyPageService myPageService){
-        this.userRepository = userRepository;
+    public MyPageController(MyPageService myPageService) {
         this.myPageService = myPageService;
     }
 
     // 마이페이지 유저 정보 조회
     @GetMapping("/profile")
-    public MyPageDTO getUserProfile() {
-
-        return myPageService.getUserProfile();
-
+    public String getUserProfile(Model model) {
+        MyPageDTO profile = myPageService.getUserProfile();
+        model.addAttribute("profile", profile);
+        return "profile";
     }
 
     // 유저 정보 수정
     @PostMapping("/profile")
-    public void updateProfile(@RequestBody MyPageDTO myPageDTO) {
+    public String updateProfile(@RequestBody MyPageDTO myPageDTO) {
         myPageService.updateProfile(myPageDTO);
+        return "redirect:/profile";
     }
 
     // 유저 정보 삭제 (회원 탈퇴)
