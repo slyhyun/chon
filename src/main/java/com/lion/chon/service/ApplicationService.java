@@ -1,5 +1,6 @@
 package com.lion.chon.service;
 
+import com.lion.chon.dto.ApplicationDTO;
 import com.lion.chon.entity.ApplicationEntity;
 import com.lion.chon.entity.BoardEntity;
 import com.lion.chon.entity.UserEntity;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApplicationService {
@@ -28,7 +30,7 @@ public class ApplicationService {
     }
 
     // 신청
-    public void application(int id) {
+    public ApplicationDTO application(int id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
 
@@ -36,12 +38,30 @@ public class ApplicationService {
 
         ApplicationEntity applicationEntity = new ApplicationEntity();
 
-        BoardEntity board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글에 접근하였습니다."));
-        applicationEntity.setBoardEntity(board);
+        Optional<BoardEntity> existingBoard = boardRepository.findById(id);
+        Optional<UserEntity> existingUser = userRepository.findById(username);
 
-        UserEntity user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        applicationEntity.setUserEntity(user);
-        applicationRepository.save(applicationEntity);
+        if(existingBoard.isPresent() && existingUser.isPresent()){ // TODO: 이미 신청한 사람인지 조건 체크, 신청자 초과 됐는지 백엔드에서도 체크
+            BoardEntity board = existingBoard.get();
+            UserEntity user = existingUser.get();
+            applicationEntity.setBoardEntity(board);
+            applicationEntity.setUserEntity(user);
+
+            int applicationPeople = board.getApplicationPeople();
+            applicationPeople += 1;
+            board.setApplicationPeople(applicationPeople);
+
+            ApplicationDTO applicationDTO = new ApplicationDTO();
+            applicationDTO.setMaximumPeople(board.getMaximumPeople());
+            applicationDTO.setApplicationPeople(board.getApplicationPeople());
+            
+            boardRepository.save(board);
+            applicationRepository.save(applicationEntity);
+            
+            return applicationDTO; // 현재 인원과 최대 인원을 프론트엔드로 보내 프론트엔드 단에서 초과 시 경고 문구 출력하도록
+        }else{
+            throw new RuntimeException("게시글이나 유저가 존재하지 않습니다.");
+        }
 
     }
     

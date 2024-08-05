@@ -54,6 +54,7 @@ public class BoardService {
                     .contents(boardDTO.getContents())
                     .location(boardDTO.getLocation())
                     .postDate(LocalDateTime.now())
+                    .maximumPeople(boardDTO.getMaximumPeople())
                     .build();
             BoardEntity savedBoard = boardRepository.save(board);
             return convertToDTO(savedBoard);
@@ -97,6 +98,7 @@ public class BoardService {
                 .contents(board.getContents())
                 .location(board.getLocation())
                 .postDate(board.getPostDate())
+                .maximumPeople(board.getMaximumPeople())
                 .build();
     }
 }

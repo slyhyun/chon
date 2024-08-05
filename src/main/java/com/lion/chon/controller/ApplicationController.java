@@ -1,5 +1,6 @@
 package com.lion.chon.controller;
 
+import com.lion.chon.dto.ApplicationDTO;
 import com.lion.chon.entity.ApplicationEntity;
 import com.lion.chon.service.ApplicationService;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class ApplicationController {
 
     // 신청
     @PostMapping("/{id}")
-    public void application(@PathVariable int id){
-        applicationService.application(id);
+    public ResponseEntity<ApplicationDTO> application(@PathVariable int id){
+        return ResponseEntity.ok(applicationService.application(id));
     }
     
     // 특정 유저 모든 신청 조회

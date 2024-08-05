@@ -20,5 +20,7 @@ public class BoardDTO {
     private String contents;
     private String location;
     private LocalDateTime postDate;
+    private int maximumPeople;
+    private int applicationPeople;
     private boolean isMine; // 접근한 유저의 게시글인지 여부
 }
