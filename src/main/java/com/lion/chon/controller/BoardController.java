@@ -4,13 +4,15 @@ import com.lion.chon.dto.BoardDTO;
 import com.lion.chon.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Controller
+@RestController
 @RequestMapping("/boards")
 public class BoardController {
 
@@ -23,54 +25,52 @@ public class BoardController {
 
     // 페이징된 전체 글 조회
     @GetMapping
-    public String getAllBoards(@RequestParam(defaultValue = "0") int page, Model model) {
+    public ResponseEntity<Page<BoardDTO>> getAllBoards(@RequestParam(defaultValue = "0") int page) {
         int size = 10; // 한 페이지에 10개의 게시글
         Page<BoardDTO> boardPage = boardService.getAllBoards(page, size);
-        model.addAttribute("boards", boardPage.getContent());
-        return "boards"; // boards.html 템플릿 반환
+        return ResponseEntity.ok(boardPage);
     }
 
     // 특정 글 조회
     @GetMapping("/{id}")
-    public String getBoardById(@PathVariable int id, Model model) {
+    public ResponseEntity<BoardDTO> getBoardById(@PathVariable int id) {
         BoardDTO boardDTO = boardService.getBoardById(id);
-        model.addAttribute("board", boardDTO);
-        return "boardDetail"; // boardDetail.html 템플릿 반환
+        return ResponseEntity.ok(boardDTO);
     }
 
     // 글 저장
     @PostMapping
-    public String createBoard(@ModelAttribute BoardDTO boardDTO, Principal principal) {
+    public ResponseEntity<String> createBoard(@RequestBody BoardDTO boardDTO, Principal principal) {
         String userId = principal.getName();
         boardService.createBoard(userId, boardDTO);
-        return "redirect:/boards";
+        return ResponseEntity.status(HttpStatus.CREATED).body("게시글이 성공적으로 생성되었습니다.");
     }
 
     // 글 수정
     @PostMapping("/{id}")
-    public String updateBoard(@PathVariable int id, @ModelAttribute BoardDTO boardDTO) {
+    public ResponseEntity<String> updateBoard(@PathVariable int id, @ModelAttribute BoardDTO boardDTO) {
         boardService.updateBoard(id, boardDTO);
-        return "redirect:/boards/" + id;
+        return ResponseEntity.ok("게시글이 성공적으로 업데이트 되었습니다.");
     }
 
     // 글 삭제
     @PostMapping("/{id}/delete")
-    public String deleteBoard(@PathVariable int id) {
+    public ResponseEntity<String> deleteBoard(@PathVariable int id) {
         boardService.deleteBoard(id);
-        return "redirect:/boards";
+        return ResponseEntity.ok("Board deleted successfully");
     }
 
-    // 게시글 등록 페이지
-    @GetMapping("/new")
-    public String newBoard() {
-        return "newBoard"; // newBoard.html 템플릿 반환
-    }
-
-    // 게시글 수정 페이지
-    @GetMapping("/{id}/edit")
-    public String editBoard(@PathVariable int id, Model model) {
-        BoardDTO boardDTO = boardService.getBoardById(id);
-        model.addAttribute("board", boardDTO);
-        return "editBoard"; // editBoard.html 템플릿 반환
-    }
+//    // 게시글 등록 페이지
+//    @GetMapping("/new")
+//    public String newBoard() {
+//        return "newBoard"; // newBoard.html 템플릿 반환
+//    }
+//
+//    // 게시글 수정 페이지
+//    @GetMapping("/{id}/edit")
+//    public String editBoard(@PathVariable int id, Model model) {
+//        BoardDTO boardDTO = boardService.getBoardById(id);
+//        model.addAttribute("board", boardDTO);
+//        return "editBoard"; // editBoard.html 템플릿 반환
+//    }
 }

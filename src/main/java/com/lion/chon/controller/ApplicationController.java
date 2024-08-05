@@ -2,7 +2,7 @@ package com.lion.chon.controller;
 
 import com.lion.chon.entity.ApplicationEntity;
 import com.lion.chon.service.ApplicationService;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,14 +25,16 @@ public class ApplicationController {
     
     // 특정 유저 모든 신청 조회
     @GetMapping("/my")
-    public List<ApplicationEntity> getAllApplicationsByUser() {
-        return applicationService.getAllApplicationsByUser();
+    public ResponseEntity<List<ApplicationEntity>> getAllApplicationsByUser() {
+        List<ApplicationEntity> applications = applicationService.getAllApplicationsByUser();
+        return ResponseEntity.ok(applications);
     }
 
     // 특정 게시글 모든 신청 조회
     @GetMapping("/{id}")
-    public List<ApplicationEntity> getAllApplicationsByBoard(@PathVariable int id) {
-        return applicationService.getAllApplicationsByBoard(id);
+    public ResponseEntity<List<ApplicationEntity>> getAllApplicationsByBoard(@PathVariable int id) {
+        List<ApplicationEntity> applications = applicationService.getAllApplicationsByBoard(id);
+        return ResponseEntity.ok(applications);
     }
 
 }
