@@ -2,11 +2,9 @@ package com.lion.chon.controller;
 
 import com.lion.chon.dto.MyPageDTO;
 import com.lion.chon.service.MyPageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MyPageController {
@@ -32,9 +30,13 @@ public class MyPageController {
     }
 
     // 유저 정보 삭제 (회원 탈퇴)
-    @PostMapping("/withdrawl")
-    public ResponseEntity<String> withdrawl() {
-        myPageService.withdrawl();
-        return ResponseEntity.ok("User withdrawn successfully");
+    @PostMapping("/withdrawal")
+    public ResponseEntity<String> withdrawl(@RequestParam String password) {
+        boolean isWithdrawn = myPageService.withdrawl(password);
+        if (isWithdrawn) {
+            return ResponseEntity.ok("User withdrawn successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원 탈퇴 실패");
+        }
     }
 }

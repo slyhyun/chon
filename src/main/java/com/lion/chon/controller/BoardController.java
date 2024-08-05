@@ -1,13 +1,16 @@
 package com.lion.chon.controller;
 
 import com.lion.chon.dto.BoardDTO;
+import com.lion.chon.entity.UserEntity;
 import com.lion.chon.service.BoardService;
+import com.lion.chon.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -17,10 +20,12 @@ import java.security.Principal;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, CustomUserDetailsService userDetailsService) {
         this.boardService = boardService;
+        this.userDetailsService = userDetailsService;
     }
 
     // 페이징된 전체 글 조회
@@ -35,6 +40,12 @@ public class BoardController {
     @GetMapping("/{id}")
     public ResponseEntity<BoardDTO> getBoardById(@PathVariable int id) {
         BoardDTO boardDTO = boardService.getBoardById(id);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        UserEntity user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
+
+        boardDTO.setMine(user.getId().equals(boardDTO.getUserId()));
         return ResponseEntity.ok(boardDTO);
     }
 
@@ -48,29 +59,36 @@ public class BoardController {
 
     // 글 수정
     @PostMapping("/{id}")
-    public ResponseEntity<String> updateBoard(@PathVariable int id, @ModelAttribute BoardDTO boardDTO) {
-        boardService.updateBoard(id, boardDTO);
-        return ResponseEntity.ok("게시글이 성공적으로 업데이트 되었습니다.");
+    public ResponseEntity<String> updateBoard(@PathVariable int id, @RequestBody BoardDTO boardDTO) {
+        BoardDTO existBoardDTO = boardService.getBoardById(id);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        UserEntity user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
+
+        if(existBoardDTO.getUserId().equals(user.getId()) || user.getRole().equals(UserEntity.Role.ADMIN)){
+            boardService.updateBoard(id, boardDTO);
+            return ResponseEntity.ok("게시글이 성공적으로 업데이트 되었습니다.");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글을 수정할 권한이 없습니다.");
+        }
+
+
     }
 
     // 글 삭제
     @PostMapping("/{id}/delete")
     public ResponseEntity<String> deleteBoard(@PathVariable int id) {
-        boardService.deleteBoard(id);
-        return ResponseEntity.ok("Board deleted successfully");
-    }
+        BoardDTO existBoardDTO = boardService.getBoardById(id);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        UserEntity user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
 
-//    // 게시글 등록 페이지
-//    @GetMapping("/new")
-//    public String newBoard() {
-//        return "newBoard"; // newBoard.html 템플릿 반환
-//    }
-//
-//    // 게시글 수정 페이지
-//    @GetMapping("/{id}/edit")
-//    public String editBoard(@PathVariable int id, Model model) {
-//        BoardDTO boardDTO = boardService.getBoardById(id);
-//        model.addAttribute("board", boardDTO);
-//        return "editBoard"; // editBoard.html 템플릿 반환
-//    }
+        if(existBoardDTO.getUserId().equals(user.getId()) || user.getRole().equals(UserEntity.Role.ADMIN)){
+            boardService.deleteBoard(id);
+            return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글을 삭제할 권한이 없습니다.");
+        }
+
+    }
 }
