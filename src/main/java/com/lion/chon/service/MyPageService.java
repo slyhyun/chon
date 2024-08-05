@@ -6,6 +6,7 @@ import com.lion.chon.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class MyPageService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 마이페이지 유저 정보 조회
     public MyPageDTO getUserProfile() {
@@ -48,11 +50,19 @@ public class MyPageService {
         return new MyPageDTO(userEntity);
     }
 
-    public void withdrawl() {
+    public boolean withdrawl(String password) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
-
+        UserDetails userDetails = (UserDetails) principal;
         String username = userDetails.getUsername();
-        userRepository.deleteById(username);
+
+        UserEntity userEntity = userRepository.findById(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (passwordEncoder.matches(password, userEntity.getPassword())) {
+            userRepository.deleteById(username);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

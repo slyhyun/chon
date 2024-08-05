@@ -2,10 +2,12 @@ package com.lion.chon.dto;
 
 import com.lion.chon.entity.UserEntity;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 public class MyPageDTO {
     private String name;
     private String email;
@@ -14,6 +16,9 @@ public class MyPageDTO {
     private String residence;
     private int age;
     private String gender;
+
+    // 기본 생성자 추가
+    public MyPageDTO() {}
 
     public MyPageDTO(String name, String email, String phoneNum, LocalDate birth, String residence, int age, String gender) {
         this.name = name;

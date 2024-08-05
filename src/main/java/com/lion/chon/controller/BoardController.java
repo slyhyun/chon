@@ -1,9 +1,13 @@
 package com.lion.chon.controller;
 
 import com.lion.chon.dto.BoardDTO;
+import com.lion.chon.entity.UserEntity;
 import com.lion.chon.service.BoardService;
+import com.lion.chon.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +19,12 @@ import java.security.Principal;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, CustomUserDetailsService userDetailsService) {
         this.boardService = boardService;
+        this.userDetailsService = userDetailsService;
     }
 
     // 페이징된 전체 글 조회
@@ -35,6 +41,14 @@ public class BoardController {
     public String getBoardById(@PathVariable int id, Model model) {
         BoardDTO boardDTO = boardService.getBoardById(id);
         model.addAttribute("board", boardDTO);
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        UserEntity user = userDetailsService.loadUserEntityByUsername(userDetails.getUsername());
+
+        model.addAttribute("currentUserId", user.getId());
+        model.addAttribute("currentUserRole", user.getRole().name());
+
         return "boardDetail"; // boardDetail.html 템플릿 반환
     }
 

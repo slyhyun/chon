@@ -1,11 +1,7 @@
 package com.lion.chon.controller;
 
 import com.lion.chon.dto.MyPageDTO;
-import com.lion.chon.entity.UserEntity;
-import com.lion.chon.repository.UserRepository;
 import com.lion.chon.service.MyPageService;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +25,25 @@ public class MyPageController {
 
     // 유저 정보 수정
     @PostMapping("/profile")
-    public String updateProfile(@RequestBody MyPageDTO myPageDTO) {
+    public String updateProfile(@ModelAttribute MyPageDTO myPageDTO) {
         myPageService.updateProfile(myPageDTO);
         return "redirect:/profile";
     }
 
+    // 회원 탈퇴 페이지 이동
+    @GetMapping("/withdrawal")
+    public String getWithdrawalPage() {
+        return "withdrawal";
+    }
+
     // 유저 정보 삭제 (회원 탈퇴)
-    @DeleteMapping("/withdrawl")
-    public void withdrawl() {
-        myPageService.withdrawl();
+    @PostMapping("/withdrawal")
+    public String withdrawl(@RequestParam String password) {
+        boolean isWithdrawn = myPageService.withdrawl(password);
+        if (isWithdrawn) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/withdrawal";
+        }
     }
 }

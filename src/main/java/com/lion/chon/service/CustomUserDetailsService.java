@@ -29,4 +29,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .roles(user.getRole().name())
                 .build();
     }
+
+    public UserEntity loadUserEntityByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
 }
