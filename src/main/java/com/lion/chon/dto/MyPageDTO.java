@@ -14,7 +14,7 @@ public class MyPageDTO {
     private String phoneNum;
     private LocalDate birth;
     private String residence;
-    private int age;
+    private Integer age;
     private String gender;
 
     // 기본 생성자 추가

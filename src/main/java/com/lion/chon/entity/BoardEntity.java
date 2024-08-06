@@ -48,6 +48,9 @@ public class BoardEntity {
     @Column(name = "post_date", nullable = false)
     private LocalDateTime postDate;
 
-    @Column(name = "application_people", nullable = false)
-    private Integer applicationPeople; // 여기서 int를 Integer로 변경
+    @Column(name = "maximum_people")
+    private int maximumPeople;
+
+    @Column(name = "application_people")
+    private int applicationPeople;
 }

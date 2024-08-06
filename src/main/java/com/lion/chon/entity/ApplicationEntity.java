@@ -16,7 +16,7 @@ public class ApplicationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "application_id", nullable = false, unique = true)
-    private int applicationId;
+    private Long applicationId;
 
     @CreationTimestamp
     private Timestamp postDate;

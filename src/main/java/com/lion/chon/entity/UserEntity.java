@@ -39,7 +39,7 @@ public class UserEntity {
     private LocalDate birth;
 
     @Column(name = "age", nullable = false)
-    private int age;
+    private Integer age;
 
     @Column(name = "gender", nullable = false)
     private String gender;
