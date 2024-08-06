@@ -16,7 +16,7 @@ public class BoardEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -31,7 +31,7 @@ public class BoardEntity {
     private String phoneNum;
 
     @Column(name = "age", nullable = false)
-    private int age;
+    private Integer age;
 
     @Column(name = "gender", nullable = false)
     private String gender;
@@ -49,8 +49,8 @@ public class BoardEntity {
     private LocalDateTime postDate;
 
     @Column(name = "maximum_people")
-    private int maximumPeople;
+    private Integer maximumPeople;
 
     @Column(name = "application_people")
-    private int applicationPeople;
+    private Integer applicationPeople;
 }

@@ -20,7 +20,7 @@ UserDTO {
     private String phoneNum;
     private String residence;
     private LocalDate birth;
-    private int age;
+    private Integer age;
     private String gender;
     private LocalDateTime registerDate;
     private String role;

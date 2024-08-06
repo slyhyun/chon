@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationDTO {
-    private int maximumPeople;
-    private int applicationPeople;
+    private Integer maximumPeople;
+    private Integer applicationPeople;
 }

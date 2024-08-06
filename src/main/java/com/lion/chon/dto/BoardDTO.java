@@ -9,18 +9,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardDTO {
-    private int id;
+    private Long id;
     private String userId;
     private String name;
     private String email;
     private String phoneNum;
-    private int age;
+    private Integer age;
     private String gender;
     private String title;
     private String contents;
     private String location;
     private LocalDateTime postDate;
-    private int maximumPeople;
-    private int applicationPeople;
+    private Integer maximumPeople;
+    private Integer applicationPeople;
     private boolean isMine; // 접근한 유저의 게시글인지 여부
 }
